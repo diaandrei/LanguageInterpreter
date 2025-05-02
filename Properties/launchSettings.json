@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LanguageInterpreter": {
+      "commandName": "Project",
+      "commandLineArgs": "stage1_examples.txt"
+    }
+  }
+}

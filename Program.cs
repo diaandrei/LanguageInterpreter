@@ -6,7 +6,7 @@
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("Usage: LanguageInterpreter <filename>");
+                Console.WriteLine("LanguageInterpreter");
                 return;
             }
 
