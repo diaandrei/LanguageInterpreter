@@ -9,6 +9,14 @@
         private int _current = 0;
         private int _line = 1;
 
+        private static readonly Dictionary<string, TokenType> _keywords = new Dictionary<string, TokenType>
+        {
+            { "and", TokenType.AND },
+            { "or", TokenType.OR },
+            { "true", TokenType.TRUE },
+            { "false", TokenType.FALSE }
+        };
+
         public Tokenizer(string source)
         {
             _source = source;
@@ -33,10 +41,19 @@
             {
                 case '(': AddToken(TokenType.LEFT_PAREN); break;
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
-                case '-': AddToken(TokenType.MINUS); break;
+                case '-':
+                case '–':
+                case '—':
+                    AddToken(TokenType.MINUS);
+                    break;
                 case '+': AddToken(TokenType.PLUS); break;
                 case '*': AddToken(TokenType.STAR); break;
                 case '/': AddToken(TokenType.SLASH); break;
+
+                case '!': AddToken(Match('=') ? TokenType.BANG_EQUAL : TokenType.BANG); break;
+                case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
+                case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
+                case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
 
                 case ' ':
                 case '\r':
@@ -48,12 +65,42 @@
                     {
                         Number();
                     }
+                    else if (IsAlpha(c))
+                    {
+                        Identifier();
+                    }
                     else
                     {
                         throw new Exception($"Unexpected character: {c}");
                     }
                     break;
             }
+        }
+
+        private void Identifier()
+        {
+            while (IsAlphaNumeric(Peek())) Advance();
+
+            string text = _source.Substring(_start, _current - _start);
+
+            TokenType type;
+            if (!_keywords.TryGetValue(text, out type))
+            {
+                type = TokenType.EQUAL;
+                throw new Exception($"Unknown identifier: {text}");
+            }
+
+            AddToken(type);
+        }
+
+        private bool IsAlpha(char c)
+        {
+            return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+        }
+
+        private bool IsAlphaNumeric(char c)
+        {
+            return IsAlpha(c) || IsDigit(c);
         }
 
         private void Number()
@@ -69,6 +116,15 @@
 
             double value = double.Parse(_source.Substring(_start, _current - _start));
             AddToken(TokenType.NUMBER, value);
+        }
+
+        private bool Match(char expected)
+        {
+            if (IsAtEnd()) return false;
+            if (_source[_current] != expected) return false;
+
+            _current++;
+            return true;
         }
 
         private bool IsDigit(char c)
