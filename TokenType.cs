@@ -5,7 +5,14 @@
         LEFT_PAREN, RIGHT_PAREN,
         MINUS, PLUS, SLASH, STAR,
 
-        NUMBER,
+        BANG, BANG_EQUAL,
+        EQUAL, EQUAL_EQUAL,
+        GREATER, GREATER_EQUAL,
+        LESS, LESS_EQUAL,
+
+        NUMBER, TRUE, FALSE,
+
+        AND, OR,
 
         EOF
     }
