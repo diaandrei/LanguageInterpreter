@@ -5,6 +5,11 @@
         public abstract object Evaluate();
     }
 
+    public class RuntimeException : Exception
+    {
+        public RuntimeException(string message) : base(message) { }
+    }
+
     public class BinaryExpr : Expr
     {
         public Expr Left { get; }
@@ -23,26 +28,85 @@
             object leftVal = Left.Evaluate();
             object rightVal = Right.Evaluate();
 
-            if (leftVal is double left && rightVal is double right)
+            switch (Operator.Type)
             {
-                switch (Operator.Type)
-                {
-                    case TokenType.PLUS:
-                        return left + right;
-                    case TokenType.MINUS:
-                        return left - right;
-                    case TokenType.STAR:
-                        return left * right;
-                    case TokenType.SLASH:
-                        if (right == 0)
-                            throw new System.Exception("Division by zero.");
-                        return left / right;
-                    default:
-                        throw new System.Exception($"Unknown operator: {Operator.Lexeme}");
-                }
-            }
+                case TokenType.PLUS:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal + (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
 
-            throw new System.Exception("Operands must be numbers.");
+                case TokenType.MINUS:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal - (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.STAR:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal * (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.SLASH:
+                    if (leftVal is double && rightVal is double)
+                    {
+                        if ((double)rightVal == 0)
+                            throw new RuntimeException("Division by zero.");
+                        return (double)leftVal / (double)rightVal;
+                    }
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.GREATER:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal > (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.GREATER_EQUAL:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal >= (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.LESS:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal < (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.LESS_EQUAL:
+                    if (leftVal is double && rightVal is double)
+                        return (double)leftVal <= (double)rightVal;
+                    throw new RuntimeException("Operands must be numbers.");
+
+                case TokenType.EQUAL_EQUAL:
+                    return IsEqual(leftVal, rightVal);
+
+                case TokenType.BANG_EQUAL:
+                    return !IsEqual(leftVal, rightVal);
+
+                case TokenType.AND:
+                    if (leftVal is bool && rightVal is bool)
+                        return (bool)leftVal && (bool)rightVal;
+                    throw new RuntimeException("Operands must be booleans.");
+
+                case TokenType.OR:
+                    if (leftVal is bool && rightVal is bool)
+                        return (bool)leftVal || (bool)rightVal;
+                    throw new RuntimeException("Operands must be booleans.");
+
+                default:
+                    throw new RuntimeException($"Unknown operator: {Operator.Lexeme}");
+            }
+        }
+
+        private bool IsEqual(object a, object b)
+        {
+            if (a == null && b == null) return true;
+            if (a == null) return false;
+
+            if (a is bool && b is bool)
+                return (bool)a == (bool)b;
+
+            if (a is double && b is double)
+                return (double)a == (double)b;
+
+            return false;
         }
     }
 
@@ -91,18 +155,26 @@
         {
             object rightVal = Right.Evaluate();
 
-            if (rightVal is double value)
+            switch (Operator.Type)
             {
-                switch (Operator.Type)
-                {
-                    case TokenType.MINUS:
-                        return -value;
-                    default:
-                        throw new System.Exception($"Unknown operator: {Operator.Lexeme}");
-                }
-            }
+                case TokenType.MINUS:
+                    if (rightVal is double)
+                        return -(double)rightVal;
+                    throw new RuntimeException("Operand must be a number.");
 
-            throw new System.Exception("Operand must be a number.");
+                case TokenType.BANG:
+                    return !IsTruthy(rightVal);
+
+                default:
+                    throw new RuntimeException($"Unknown operator: {Operator.Lexeme}");
+            }
+        }
+        private bool IsTruthy(object obj)
+        {
+            if (obj == null) return false;
+            if (obj is bool) return (bool)obj;
+
+            return true;
         }
     }
 }
