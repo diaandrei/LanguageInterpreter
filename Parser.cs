@@ -20,13 +20,69 @@
             }
             catch (ParseError)
             {
-                return null!;
+                return null;
             }
         }
 
         private Expr Expression()
         {
-            return Term();
+            return Or();
+        }
+
+        private Expr Or()
+        {
+            Expr expr = And();
+
+            while (Match(TokenType.OR))
+            {
+                Token op = Previous();
+                Expr right = And();
+                expr = new BinaryExpr(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr And()
+        {
+            Expr expr = Equality();
+
+            while (Match(TokenType.AND))
+            {
+                Token op = Previous();
+                Expr right = Equality();
+                expr = new BinaryExpr(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr Equality()
+        {
+            Expr expr = Comparison();
+
+            while (Match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL))
+            {
+                Token op = Previous();
+                Expr right = Comparison();
+                expr = new BinaryExpr(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr Comparison()
+        {
+            Expr expr = Term();
+
+            while (Match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL))
+            {
+                Token op = Previous();
+                Expr right = Term();
+                expr = new BinaryExpr(expr, op, right);
+            }
+
+            return expr;
         }
 
         private Expr Term()
@@ -59,7 +115,7 @@
 
         private Expr Unary()
         {
-            if (Match(TokenType.MINUS))
+            if (Match(TokenType.BANG, TokenType.MINUS))
             {
                 Token op = Previous();
                 Expr right = Unary();
@@ -71,10 +127,9 @@
 
         private Expr Primary()
         {
-            if (Match(TokenType.NUMBER))
-            {
-                return new LiteralExpr(Previous().Literal);
-            }
+            if (Match(TokenType.FALSE)) return new LiteralExpr(false);
+            if (Match(TokenType.TRUE)) return new LiteralExpr(true);
+            if (Match(TokenType.NUMBER)) return new LiteralExpr(Previous().Literal);
 
             if (Match(TokenType.LEFT_PAREN))
             {
