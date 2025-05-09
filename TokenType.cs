@@ -10,7 +10,7 @@
         GREATER, GREATER_EQUAL,
         LESS, LESS_EQUAL,
 
-        NUMBER, TRUE, FALSE,
+        NUMBER, STRING, TRUE, FALSE,
 
         AND, OR,
 
