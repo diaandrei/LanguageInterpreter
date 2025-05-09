@@ -55,6 +55,8 @@
                 case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
                 case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
 
+                case '"': String(); break;
+
                 case ' ':
                 case '\r':
                 case '\t':
@@ -77,6 +79,37 @@
             }
         }
 
+        private void String()
+        {
+            while (Peek() != '"' && !IsAtEnd())
+            {
+                if (Peek() == '\n') _line++;
+
+                if (Peek() == '\\' && PeekNext() == '"')
+                {
+                    Advance();
+                }
+
+                Advance();
+            }
+
+            if (IsAtEnd())
+            {
+                throw new Exception("Unterminated string.");
+            }
+
+            Advance();
+
+            string value = _source.Substring(_start + 1, _current - _start - 2);
+
+            value = value.Replace("\\\"", "\"")
+                        .Replace("\\n", "\n")
+                        .Replace("\\t", "\t")
+                        .Replace("\\\\", "\\");
+
+            AddToken(TokenType.STRING, value);
+        }
+
         private void Identifier()
         {
             while (IsAlphaNumeric(Peek())) Advance();
@@ -86,7 +119,6 @@
             TokenType type;
             if (!_keywords.TryGetValue(text, out type))
             {
-                type = TokenType.EQUAL;
                 throw new Exception($"Unknown identifier: {text}");
             }
 
@@ -110,7 +142,6 @@
             if (Peek() == '.' && IsDigit(PeekNext()))
             {
                 Advance();
-
                 while (IsDigit(Peek())) Advance();
             }
 
