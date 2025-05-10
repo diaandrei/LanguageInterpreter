@@ -31,14 +31,11 @@
             switch (Operator.Type)
             {
                 case TokenType.PLUS:
-                    if (leftVal is string && rightVal is string)
-                        return (string)leftVal + (string)rightVal;
+                    if (leftVal is string)
+                        return (string)leftVal + rightVal?.ToString();
 
-                    if (leftVal is string && rightVal is double)
-                        return (string)leftVal + rightVal.ToString();
-
-                    if (leftVal is double && rightVal is string)
-                        return leftVal.ToString() + (string)rightVal;
+                    if (rightVal is string)
+                        return leftVal?.ToString() + (string)rightVal;
 
                     if (leftVal is double && rightVal is double)
                         return (double)leftVal + (double)rightVal;

@@ -130,6 +130,7 @@
             if (Match(TokenType.FALSE)) return new LiteralExpr(false);
             if (Match(TokenType.TRUE)) return new LiteralExpr(true);
             if (Match(TokenType.NUMBER)) return new LiteralExpr(Previous().Literal);
+            if (Match(TokenType.STRING)) return new LiteralExpr(Previous().Literal);
 
             if (Match(TokenType.LEFT_PAREN))
             {
