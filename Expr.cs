@@ -31,9 +31,19 @@
             switch (Operator.Type)
             {
                 case TokenType.PLUS:
+                    if (leftVal is string && rightVal is string)
+                        return (string)leftVal + (string)rightVal;
+
+                    if (leftVal is string && rightVal is double)
+                        return (string)leftVal + rightVal.ToString();
+
+                    if (leftVal is double && rightVal is string)
+                        return leftVal.ToString() + (string)rightVal;
+
                     if (leftVal is double && rightVal is double)
                         return (double)leftVal + (double)rightVal;
-                    throw new RuntimeException("Operands must be numbers.");
+
+                    throw new RuntimeException("Operands must be two numbers or at least one string.");
 
                 case TokenType.MINUS:
                     if (leftVal is double && rightVal is double)
@@ -99,6 +109,9 @@
         {
             if (a == null && b == null) return true;
             if (a == null) return false;
+
+            if (a is string && b is string)
+                return (string)a == (string)b;
 
             if (a is bool && b is bool)
                 return (bool)a == (bool)b;
@@ -169,11 +182,11 @@
                     throw new RuntimeException($"Unknown operator: {Operator.Lexeme}");
             }
         }
+
         private bool IsTruthy(object obj)
         {
             if (obj == null) return false;
             if (obj is bool) return (bool)obj;
-
             return true;
         }
     }
