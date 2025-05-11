@@ -14,6 +14,8 @@
 
         AND, OR,
 
+        IDENTIFIER, PRINT,
+
         EOF
     }
 }
