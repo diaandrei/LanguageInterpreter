@@ -2,7 +2,7 @@
 {
     public abstract class Expr
     {
-        public abstract object Evaluate();
+        public abstract object Evaluate(Environment environment);
     }
 
     public class RuntimeException : Exception
@@ -23,10 +23,10 @@
             Right = right;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(Environment environment)
         {
-            object leftVal = Left.Evaluate();
-            object rightVal = Right.Evaluate();
+            object leftVal = Left.Evaluate(environment);
+            object rightVal = Right.Evaluate(environment);
 
             switch (Operator.Type)
             {
@@ -129,9 +129,9 @@
             Expression = expression;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(Environment environment)
         {
-            return Expression.Evaluate();
+            return Expression.Evaluate(environment);
         }
     }
 
@@ -144,7 +144,7 @@
             Value = value;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(Environment environment)
         {
             return Value;
         }
@@ -161,9 +161,9 @@
             Right = right;
         }
 
-        public override object Evaluate()
+        public override object Evaluate(Environment environment)
         {
-            object rightVal = Right.Evaluate();
+            object rightVal = Right.Evaluate(environment);
 
             switch (Operator.Type)
             {
@@ -185,6 +185,40 @@
             if (obj == null) return false;
             if (obj is bool) return (bool)obj;
             return true;
+        }
+    }
+
+    public class VariableExpr : Expr
+    {
+        public Token Name { get; }
+
+        public VariableExpr(Token name)
+        {
+            Name = name;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            return environment.Get(Name.Lexeme);
+        }
+    }
+
+    public class AssignExpr : Expr
+    {
+        public Token Name { get; }
+        public Expr Value { get; }
+
+        public AssignExpr(Token name, Expr value)
+        {
+            Name = name;
+            Value = value;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            object value = Value.Evaluate(environment);
+            environment.Assign(Name.Lexeme, value);
+            return value;
         }
     }
 }
