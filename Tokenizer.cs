@@ -1,4 +1,4 @@
-﻿namespace LanguageInterpreter
+namespace LanguageInterpreter
 {
     public class Tokenizer
     {
@@ -43,8 +43,6 @@
                 case '(': AddToken(TokenType.LEFT_PAREN); break;
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
                 case '-':
-                case '–':
-                case '—':
                     AddToken(TokenType.MINUS);
                     break;
                 case '+': AddToken(TokenType.PLUS); break;
