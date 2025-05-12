@@ -14,7 +14,8 @@
             { "and", TokenType.AND },
             { "or", TokenType.OR },
             { "true", TokenType.TRUE },
-            { "false", TokenType.FALSE }
+            { "false", TokenType.FALSE },
+            { "print", TokenType.PRINT }
         };
 
         public Tokenizer(string source)
@@ -119,7 +120,7 @@
             TokenType type;
             if (!_keywords.TryGetValue(text, out type))
             {
-                throw new Exception($"Unknown identifier: {text}");
+                type = TokenType.IDENTIFIER;
             }
 
             AddToken(type);
