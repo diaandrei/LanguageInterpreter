@@ -25,18 +25,23 @@
 
         private Statement Statement()
         {
-            if (Match(TokenType.PRINT))
-                return PrintStatement();
+            Statement stmt;
 
-            if (Match(TokenType.IDENTIFIER) && Check(TokenType.EQUAL))
+            if (Match(TokenType.PRINT))
+                stmt = PrintStatement();
+            else if (Match(TokenType.IDENTIFIER) && Check(TokenType.EQUAL))
             {
                 Token name = Previous();
                 Consume(TokenType.EQUAL, "Expect '=' after variable name.");
                 Expr value = Expression();
-                return new VariableStatement(name, value);
+                stmt = new VariableStatement(name, value);
             }
+            else
+                stmt = ExpressionStatement();
 
-            return ExpressionStatement();
+            Match(TokenType.SEMICOLON);
+
+            return stmt;
         }
 
         private Statement PrintStatement()

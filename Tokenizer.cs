@@ -42,6 +42,7 @@ namespace LanguageInterpreter
             {
                 case '(': AddToken(TokenType.LEFT_PAREN); break;
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
+                case ';': AddToken(TokenType.SEMICOLON); break;
                 case '-':
                     AddToken(TokenType.MINUS);
                     break;

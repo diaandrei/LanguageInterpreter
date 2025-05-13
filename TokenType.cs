@@ -4,6 +4,7 @@
     {
         LEFT_PAREN, RIGHT_PAREN,
         MINUS, PLUS, SLASH, STAR,
+        SEMICOLON,
 
         BANG, BANG_EQUAL,
         EQUAL, EQUAL_EQUAL,
