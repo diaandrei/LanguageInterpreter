@@ -16,7 +16,12 @@
 
         public override void Execute(Environment environment)
         {
-            Expression.Evaluate(environment);
+            object result = Expression.Evaluate(environment);
+
+            if (result != null && !(Expression is AssignExpr))
+            {
+                Console.WriteLine(result);
+            }
         }
     }
 

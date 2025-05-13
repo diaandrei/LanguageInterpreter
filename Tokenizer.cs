@@ -44,6 +44,8 @@ namespace LanguageInterpreter
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case '-':
+                case '–':
+                case '—':
                     AddToken(TokenType.MINUS);
                     break;
                 case '+': AddToken(TokenType.PLUS); break;
@@ -60,6 +62,8 @@ namespace LanguageInterpreter
                 case ' ':
                 case '\r':
                 case '\t':
+                case '\n':
+                    if (c == '\n') _line++;
                     break;
 
                 default:
@@ -73,7 +77,7 @@ namespace LanguageInterpreter
                     }
                     else
                     {
-                        throw new Exception($"Unexpected character: {c}");
+                        throw new Exception($"Unexpected character: '{c}' (code: {(int)c})");
                     }
                     break;
             }
