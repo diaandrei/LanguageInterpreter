@@ -6,7 +6,7 @@
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("LanguageInterpreter");
+                Console.WriteLine("Usage: LanguageInterpreter <filename>");
                 return;
             }
 
@@ -15,30 +15,26 @@
             try
             {
                 string[] lines = File.ReadAllLines(filename);
+                string source = string.Join("\n", lines);
 
-                foreach (string line in lines)
+                try
                 {
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
+                    Tokenizer tokenizer = new Tokenizer(source);
+                    List<Token> tokens = tokenizer.ScanTokens();
 
-                    try
+                    Parser parser = new Parser(tokens);
+                    List<Statement> statements = parser.Parse();
+
+                    Environment environment = new Environment();
+
+                    foreach (var statement in statements)
                     {
-                        var tokenizer = new Tokenizer(line);
-                        var tokens = tokenizer.ScanTokens();
-
-                        var parser = new Parser(tokens);
-                        var expression = parser.Parse();
-
-                        if (expression != null)
-                        {
-                            var result = expression.Evaluate();
-                            Console.WriteLine(result);
-                        }
+                        statement.Execute(environment);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error: {ex.Message}");
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
             }
             catch (FileNotFoundException)
