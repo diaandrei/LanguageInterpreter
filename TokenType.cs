@@ -3,6 +3,7 @@
     public enum TokenType
     {
         LEFT_PAREN, RIGHT_PAREN,
+        LEFT_BRACE, RIGHT_BRACE,
         MINUS, PLUS, SLASH, STAR,
         SEMICOLON,
 
@@ -16,6 +17,7 @@
         AND, OR,
 
         IDENTIFIER, PRINT,
+        IF, ELSE, WHILE, INPUT,
 
         EOF
     }
