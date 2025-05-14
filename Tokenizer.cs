@@ -15,7 +15,11 @@ namespace LanguageInterpreter
             { "or", TokenType.OR },
             { "true", TokenType.TRUE },
             { "false", TokenType.FALSE },
-            { "print", TokenType.PRINT }
+            { "print", TokenType.PRINT },
+            { "if", TokenType.IF },
+            { "else", TokenType.ELSE },
+            { "while", TokenType.WHILE },
+            { "input", TokenType.INPUT }
         };
 
         public Tokenizer(string source)
@@ -42,6 +46,8 @@ namespace LanguageInterpreter
             {
                 case '(': AddToken(TokenType.LEFT_PAREN); break;
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
+                case '{': AddToken(TokenType.LEFT_BRACE); break;
+                case '}': AddToken(TokenType.RIGHT_BRACE); break;
                 case ';': AddToken(TokenType.SEMICOLON); break;
                 case '-':
                 case '–':
