@@ -221,4 +221,25 @@
             return value;
         }
     }
+
+    public class InputExpr : Expr
+    {
+        public Expr Prompt { get; }
+
+        public InputExpr(Expr prompt)
+        {
+            Prompt = prompt;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            if (Prompt != null)
+            {
+                object promptValue = Prompt.Evaluate(environment);
+                Console.Write(promptValue.ToString());
+            }
+
+            return Console.ReadLine();
+        }
+    }
 }
