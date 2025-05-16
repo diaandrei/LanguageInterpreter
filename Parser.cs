@@ -27,7 +27,13 @@
         {
             Statement stmt;
 
-            if (Match(TokenType.PRINT))
+            if (Match(TokenType.IF))
+                stmt = IfStatement();
+            else if (Match(TokenType.WHILE))
+                stmt = WhileStatement();
+            else if (Match(TokenType.LEFT_BRACE))
+                stmt = new BlockStatement(Block());
+            else if (Match(TokenType.PRINT))
                 stmt = PrintStatement();
             else if (Match(TokenType.IDENTIFIER) && Check(TokenType.EQUAL))
             {
@@ -42,6 +48,45 @@
             Match(TokenType.SEMICOLON);
 
             return stmt;
+        }
+
+        private Statement IfStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+            Expr condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+            Statement thenBranch = Statement();
+            Statement elseBranch = null;
+            if (Match(TokenType.ELSE))
+            {
+                elseBranch = Statement();
+            }
+
+            return new IfStatement(condition, thenBranch, elseBranch);
+        }
+
+        private Statement WhileStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+            Expr condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+            Statement body = Statement();
+
+            return new WhileStatement(condition, body);
+        }
+
+        private List<Statement> Block()
+        {
+            List<Statement> statements = new List<Statement>();
+
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                statements.Add(Statement());
+            }
+
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+            return statements;
         }
 
         private Statement PrintStatement()
@@ -187,6 +232,20 @@
 
             if (Match(TokenType.IDENTIFIER))
                 return new VariableExpr(Previous());
+
+            if (Match(TokenType.INPUT))
+            {
+                Consume(TokenType.LEFT_PAREN, "Expect '(' after 'input'.");
+                Expr prompt = null!;
+
+                if (!Check(TokenType.RIGHT_PAREN))
+                {
+                    prompt = Expression();
+                }
+
+                Consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+                return new InputExpr(prompt);
+            }
 
             if (Match(TokenType.LEFT_PAREN))
             {
