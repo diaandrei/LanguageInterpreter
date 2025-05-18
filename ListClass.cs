@@ -23,7 +23,7 @@
         {
             if (index < 0 || index >= elements.Count)
             {
-                throw new RuntimeException($"Index out of range: {index}");
+                throw new Exception($"Index out of range: {index}");
             }
             return elements[index];
         }
@@ -32,7 +32,7 @@
         {
             if (index < 0 || index >= elements.Count)
             {
-                throw new RuntimeException($"Index out of range: {index}");
+                throw new Exception($"Index out of range: {index}");
             }
             elements[index] = value;
         }
@@ -41,7 +41,7 @@
         {
             if (index < 0 || index >= elements.Count)
             {
-                throw new RuntimeException($"Index out of range: {index}");
+                throw new Exception($"Index out of range: {index}");
             }
 
             object removed = elements[index];
