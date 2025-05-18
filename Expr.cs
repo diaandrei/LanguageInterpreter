@@ -242,4 +242,61 @@
             return Console.ReadLine();
         }
     }
+
+    public class ListExpr : Expr
+    {
+        public List<Expr> Elements { get; }
+
+        public ListExpr(List<Expr> elements)
+        {
+            Elements = elements;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            List<object> values = new List<object>();
+            foreach (var element in Elements)
+            {
+                values.Add(element.Evaluate(environment));
+            }
+
+            return new ListClass(values);
+        }
+    }
+
+    public class IndexExpr : Expr
+    {
+        public Expr List { get; }
+        public Expr Index { get; }
+
+        public IndexExpr(Expr list, Expr index)
+        {
+            List = list;
+            Index = index;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            object listObj = List.Evaluate(environment);
+            object indexObj = Index.Evaluate(environment);
+
+            if (!(listObj is ListClass))
+                throw new RuntimeException("Can only index into lists.");
+
+            if (!(indexObj is double))
+                throw new RuntimeException("List index must be a number.");
+
+            ListClass list = (ListClass)listObj;
+            int index = (int)(double)indexObj;
+
+            try
+            {
+                return list.Get(index);
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex.Message);
+            }
+        }
+    }
 }

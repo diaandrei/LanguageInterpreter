@@ -120,6 +120,11 @@
                     Token name = ((VariableExpr)expr).Name;
                     return new AssignExpr(name, value);
                 }
+                else if (expr is IndexExpr)
+                {
+                    IndexExpr index = (IndexExpr)expr;
+                    return new SetIndexExpr(index.List, index.Index, value);
+                }
 
                 Error(equals, "Invalid assignment target.");
             }
@@ -220,7 +225,28 @@
                 return new UnaryExpr(op, right);
             }
 
-            return Primary();
+            return Call();
+        }
+
+        private Expr Call()
+        {
+            Expr expr = Primary();
+
+            while (true)
+            {
+                if (Match(TokenType.LEFT_BRACKET))
+                {
+                    Expr index = Expression();
+                    Consume(TokenType.RIGHT_BRACKET, "Expect ']' after index.");
+                    expr = new IndexExpr(expr, index);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return expr;
         }
 
         private Expr Primary()
@@ -245,6 +271,22 @@
 
                 Consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
                 return new InputExpr(prompt);
+            }
+
+            if (Match(TokenType.LEFT_BRACKET))
+            {
+                List<Expr> elements = new List<Expr>();
+
+                if (!Check(TokenType.RIGHT_BRACKET))
+                {
+                    do
+                    {
+                        elements.Add(Expression());
+                    } while (Match(TokenType.COMMA));
+                }
+
+                Consume(TokenType.RIGHT_BRACKET, "Expect ']' after list elements.");
+                return new ListExpr(elements);
             }
 
             if (Match(TokenType.LEFT_PAREN))
@@ -309,6 +351,46 @@
         {
             Console.Error.WriteLine($"Error at {token}: {message}");
             return new ParseError();
+        }
+    }
+
+    public class SetIndexExpr : Expr
+    {
+        public Expr List { get; }
+        public Expr Index { get; }
+        public Expr Value { get; }
+
+        public SetIndexExpr(Expr list, Expr index, Expr value)
+        {
+            List = list;
+            Index = index;
+            Value = value;
+        }
+
+        public override object Evaluate(Environment environment)
+        {
+            object listObj = List.Evaluate(environment);
+            object indexObj = Index.Evaluate(environment);
+            object value = Value.Evaluate(environment);
+
+            if (!(listObj is ListClass))
+                throw new RuntimeException("Can only index into lists.");
+
+            if (!(indexObj is double))
+                throw new RuntimeException("List index must be a number.");
+
+            ListClass list = (ListClass)listObj;
+            int index = (int)(double)indexObj;
+
+            try
+            {
+                list.Set(index, value);
+                return value;
+            }
+            catch (Exception ex)
+            {
+                throw new RuntimeException(ex.Message);
+            }
         }
     }
 }

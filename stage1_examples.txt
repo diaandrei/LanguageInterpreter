@@ -114,3 +114,21 @@ while (is_running == true) {
 }
 
 print "Shopping list: " + shopping_list
+
+print ""
+print "Stage 6"
+print ""
+
+print "List Creation"
+myList = [1, 2, 3]
+print "My list:"
+print myList
+
+print ""
+print "Accessing List Elements"
+print "First element:"
+print myList[0]
+print "Second element:"
+print myList[1]
+print "Out of range index"
+print myList[100]
