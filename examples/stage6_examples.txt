@@ -1,0 +1,24 @@
+﻿print "Stage 6 - Lists"
+print "=============="
+print ""
+
+print "List Creation"
+myList = [1, 2, 3]
+print "myList = " + myList
+
+print ""
+print "Accessing List Elements"
+print "First element: " + myList[0]
+print "Second element: " + myList[1]
+print "Third element: " + myList[2]
+
+print ""
+print "Nested Lists"
+nestedList = [[1, 2], [3, 4], [5, 6]]
+print "nestedList = " + nestedList
+print "nestedList[1][0] = " + nestedList[1][0]
+
+print ""
+print "Mixed Type Lists"
+mixedList = [1, "hello", true, 3.14]
+print "mixedList = " + mixedList

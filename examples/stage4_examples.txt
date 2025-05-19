@@ -1,0 +1,26 @@
+﻿print "Stage 4 - Global Data"
+print "===================="
+print ""
+
+print "Example 1: Variable Assignment and Arithmetic"
+quickMaths = 10
+quickMaths = quickMaths + 2
+print quickMaths
+
+print ""
+print "Example 2: Floating Point Operations"
+floatTest = 1.0
+floatTest = floatTest + 5
+print floatTest
+
+print ""
+print "Example 3: String Concatenation with Variables"
+stringCatTest = "10 corgis"
+stringCatTest = stringCatTest + " and " + 5 + " more corgis"
+print stringCatTest
+
+print ""
+print "Example 4: Type Conversion"
+errorTest = 5
+errorTest = errorTest + "insert string here"
+print errorTest

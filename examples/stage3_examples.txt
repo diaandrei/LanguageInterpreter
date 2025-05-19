@@ -1,0 +1,34 @@
+﻿print "Stage 3 - Text Values"
+print "===================="
+print ""
+
+print "Example 1: \"hello\" + \" \" + \"world\""
+"hello" + " " + "world"
+
+print ""
+print "Example 2: \"foo\" + \"bar\" == \"foobar\""
+"foo" + "bar" == "foobar"
+
+print ""
+print "Example 3: \"10 corgis\" != \"10\" + \"corgis\""
+"10 corgis" != "10" + "corgis"
+
+print ""
+print "Example 4: \"test\" == \"test\""
+"test" == "test"
+
+print ""
+print "Example 5: \"5\" + 10"
+"5" + 10
+
+print ""
+print "Example 6: 10 + \"5\""
+10 + "5"
+
+print ""
+print "Example 7: 1 + \"0\""
+1 + "0"
+
+print ""
+print "Example 8: false == \"false\""
+false == "false"
