@@ -32,3 +32,11 @@ print "Example 7: 1 + \"0\""
 print ""
 print "Example 8: false == \"false\""
 false == "false"
+
+print ""
+print "Example 9: Newline character"
+print "Line 1\nLine 2\nLine 3"
+
+print ""
+print "Example 10: Tab character"
+print "Name:\tJohn\nAge:\t30\nCity:\tNew York"
