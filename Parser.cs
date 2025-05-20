@@ -58,9 +58,17 @@
 
             Statement thenBranch = Statement();
             Statement elseBranch = null;
+
             if (Match(TokenType.ELSE))
             {
-                elseBranch = Statement();
+                if (Match(TokenType.IF))
+                {
+                    elseBranch = IfStatement();
+                }
+                else
+                {
+                    elseBranch = Statement();
+                }
             }
 
             return new IfStatement(condition, thenBranch, elseBranch);

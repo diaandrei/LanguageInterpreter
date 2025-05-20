@@ -68,3 +68,34 @@ while (is_running == true) {
 
 print ""
 print "Shopping list: " + shopping_list
+
+print ""
+print "If-then-else example"
+score = 75
+
+if (score >= 90) {
+    print "Grade: A"
+} else if (score >= 70) {
+    print "Grade: B"
+} else {
+    print "Grade: C"
+}
+
+print ""
+print "Nested if-then-else example"
+age = 25
+income = 40000
+
+if (age < 18) {
+    print "Category: Minor"
+} else if (age < 65) {
+    if (income < 30000) {
+        print "Working adult - Low income"
+    } else if (income < 70000) {
+        print "Working adult - Medium income"
+    } else {
+        print "Working adult - High income"
+    }
+} else {
+    print "Category: Senior"
+}
